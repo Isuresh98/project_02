@@ -11,64 +11,69 @@ public class PlayerController : MonoBehaviour
     public float jumpForce;
     public Transform groundCheck;
     public LayerMask groundLayer;
-    public GameObject bulletPrefab;
-    public Transform firePoint;
+    
     private Rigidbody2D rb;
 
-    //shooting
-    public int bulletPoolSize;
-    public List<GameObject> bulletPool;
-    public Button shootButton;
+
+
+    //movement
+    public Button moveLeftButton;
+    public Button moveRightButton;
+
+    //jump
+    public Button jumpButton;
+    private bool isJumping = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        // Shooting
-        bulletPool = new List<GameObject>();
-        for (int i = 0; i < bulletPoolSize; i++)
-        {
-            GameObject bullet = Instantiate(bulletPrefab);
-            bullet.SetActive(false);
-            bulletPool.Add(bullet);
-        }
+        rb = GetComponent<Rigidbody2D>();
 
-        // Add a listener to the button's onClick event
-        shootButton.onClick.AddListener(OnShootButtonClicked);
+        // Add listeners to movement buttons
+        moveLeftButton.onClick.AddListener(MoveLeft);
+        moveRightButton.onClick.AddListener(MoveRight);
+
+        // Add a listener to the jump button's onClick event
+        jumpButton.onClick.AddListener(OnJumpButtonClicked);
     }
 
     void Update()
     {
-        // Shooting
-        if (Input.GetButtonDown("Fire1"))
+        if (isJumping && IsGrounded())
         {
-            OnShootButtonClicked();
+            rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+            isJumping = false;
         }
     }
 
-    public void OnShootButtonClicked()
+
+
+
+    public void MoveLeft()
     {
-        Shoot(true);
+        Debug.Log("MoveLeft");
+        rb.AddForce(new Vector2(-moveSpeed, 0), ForceMode2D.Impulse);
     }
 
-    public void OnShootButtonReleased()
+    public void MoveRight()
     {
-        Shoot(false);
+        Debug.Log("MoveRight");
+        rb.AddForce(new Vector2(moveSpeed, 0), ForceMode2D.Impulse);
     }
 
-    public void Shoot(bool buttonPressed)
+
+    public void OnJumpButtonClicked()
     {
-        if (buttonPressed && bulletPool.Count > 0)
-        {
-            for (int i = 0; i < bulletPool.Count; i++)
-            {
-                if (!bulletPool[i].activeInHierarchy)
-                {
-                    bulletPool[i].SetActive(true);
-                    bulletPool[i].transform.position = firePoint.position;
-                    bulletPool[i].transform.rotation = firePoint.rotation;
-                    break;
-                }
-            }
-        }
+        Debug.Log("Jump button clicked");
+        isJumping = true;
     }
+
+
+    bool IsGrounded()
+    {
+        bool grounded = Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundLayer);
+        Debug.Log("IsGrounded: " + grounded);
+        return grounded;
+    }
+
 }
