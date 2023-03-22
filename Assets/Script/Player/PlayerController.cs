@@ -11,10 +11,9 @@ public class PlayerController : MonoBehaviour
     public float jumpForce;
     public Transform groundCheck;
     public LayerMask groundLayer;
-    
+
     private Rigidbody2D rb;
-
-
+    private bool isJumping = false;
 
     //movement
     public Button moveLeftButton;
@@ -22,7 +21,6 @@ public class PlayerController : MonoBehaviour
 
     //jump
     public Button jumpButton;
-    private bool isJumping = false;
 
     // Start is called before the first frame update
     void Start()
@@ -37,17 +35,11 @@ public class PlayerController : MonoBehaviour
         jumpButton.onClick.AddListener(OnJumpButtonClicked);
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        if (isJumping && IsGrounded())
-        {
-            rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
-            isJumping = false;
-        }
+        // Check if the player is on the ground
+        isJumping = false;
     }
-
-
-
 
     public void MoveLeft()
     {
@@ -61,19 +53,24 @@ public class PlayerController : MonoBehaviour
         rb.AddForce(new Vector2(moveSpeed, 0), ForceMode2D.Impulse);
     }
 
-
     public void OnJumpButtonClicked()
     {
         Debug.Log("Jump button clicked");
-        isJumping = true;
+        if (isJumping)
+        {
+            rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
+            
+        }
     }
 
+   
 
-    bool IsGrounded()
+    void OnCollisionEnter2D(Collision2D collision)
     {
-        bool grounded = Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundLayer);
-        Debug.Log("IsGrounded: " + grounded);
-        return grounded;
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            isJumping = true;
+        }
     }
-
+   
 }

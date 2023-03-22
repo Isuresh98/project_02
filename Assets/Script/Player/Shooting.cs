@@ -33,10 +33,7 @@ public class Shooting : MonoBehaviour
     {
 
         // Shooting
-        if (Input.GetButtonDown("Fire1"))
-        {
-            OnShootButtonClicked();
-        }
+        
     }
 
     public void OnShootButtonClicked()
