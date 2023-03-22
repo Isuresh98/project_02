@@ -204,7 +204,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1036026468}
-        m_MethodName: MoveLeft
+        m_MethodName: MoveLeftStart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -891,8 +891,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6383bd9ddb49464aae165cffbbf163e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 1
+  moveSpeed: 30
   jumpForce: 7
+  groundCheck: {fileID: 1520072318}
   groundLayer:
     serializedVersion: 2
     m_Bits: 256
@@ -1311,7 +1312,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1036026468}
-        m_MethodName: MoveRight
+        m_MethodName: MoveRightStart
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

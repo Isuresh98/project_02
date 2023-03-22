@@ -28,8 +28,8 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 
         // Add listeners to movement buttons
-        moveLeftButton.onClick.AddListener(MoveLeft);
-        moveRightButton.onClick.AddListener(MoveRight);
+        moveLeftButton.onClick.AddListener(MoveLeftStart);
+        moveRightButton.onClick.AddListener(MoveRightStart);
 
         // Add a listener to the jump button's onClick event
         jumpButton.onClick.AddListener(OnJumpButtonClicked);
@@ -38,39 +38,38 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         // Check if the player is on the ground
-        isJumping = false;
+        isJumping = !Physics2D.OverlapCircle(groundCheck.position, 0.1f, groundLayer);
     }
 
-    public void MoveLeft()
+    public void MoveLeftStart()
     {
-        Debug.Log("MoveLeft");
-        rb.AddForce(new Vector2(-moveSpeed, 0), ForceMode2D.Impulse);
+        rb.AddForce(new Vector2(-moveSpeed, 0), ForceMode2D.Force);
     }
 
-    public void MoveRight()
+    public void MoveRightStart()
     {
-        Debug.Log("MoveRight");
-        rb.AddForce(new Vector2(moveSpeed, 0), ForceMode2D.Impulse);
+        rb.AddForce(new Vector2(moveSpeed, 0), ForceMode2D.Force);
     }
 
     public void OnJumpButtonClicked()
     {
         Debug.Log("Jump button clicked");
-        if (isJumping)
+        if (!isJumping)
         {
             rb.AddForce(new Vector2(0, jumpForce), ForceMode2D.Impulse);
-            
+            isJumping = true;
         }
     }
 
-   
+    void Update()
+    {
+    }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            isJumping = true;
+            isJumping = false;
         }
     }
-   
 }
